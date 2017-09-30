@@ -6,13 +6,13 @@
 
 ## Links
 
-* [FreeBSD bugzilla][https://bugs.freebsd.org/]
-* [FreeBSD phab][https://reviews.freebsd.org/]
-* [FreeBSD package builders][https://pkg-status.freebsd.org/]
+* [FreeBSD bugzilla](https://bugs.freebsd.org/)
+* [FreeBSD phab](https://reviews.freebsd.org/)
+* [FreeBSD package builders](https://pkg-status.freebsd.org/)
 
 ## Tools
 
-* [sparse-checkout][bin/sparse-ports-checkout.sh]
+* [sparse-checkout](bin/sparse-ports-checkout.sh)
   > This script checks out a (writable) ports-tree suitable for working
   > on individual ports. The ports tree is checked out in *sparse*
   > mode, which means that you only get the bits needed to modify
