@@ -6,6 +6,8 @@
 
 ## Links
 
+* [Committer's Guide](https://www.freebsd.org/doc/en_US.ISO8859-1/articles/committers-guide/) -- [log messages](https://www.freebsd.org/doc/en_US.ISO8859-1/articles/committers-guide/commit-log-message.html)
+* [Porter's Handbook](https://www.freebsd.org/doc/en_US.ISO8859-1/books/porters-handbook/book.html)
 * [FreeBSD bugzilla](https://bugs.freebsd.org/)
 * [FreeBSD phab](https://reviews.freebsd.org/)
 * [FreeBSD package builders](https://pkg-status.freebsd.org/)
