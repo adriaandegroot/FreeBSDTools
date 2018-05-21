@@ -10,24 +10,24 @@
 # infrastructure. For a single port, that's still about 7MB.
 #
 # Usage:
-#	sparse-ports-checkout <-n name|-a name> [-f portlist] <-p cat/port> ...
+#    sparse-ports-checkout <-n name|-a name> [-f portlist] <-p cat/port> ...
 #
 # Usage:
-#	-n <name>     is for checking out a new sparse tree
-#	-a <name>     is for working on an existing tree
-#	-p <cat/port> names a port to check out
-#	-f <portlist> names a file to read a list of ports from
-#	-w            writable checkout (svn+ssh) instead of read-only (https)
-#	-R <repopath> provide a repo-path to use
-#	-d <diffnum>  checks out paths named in differential revision <diffnum>
+#    -n <name>     is for checking out a new sparse tree
+#    -a <name>     is for working on an existing tree
+#    -p <cat/port> names a port to check out
+#    -f <portlist> names a file to read a list of ports from
+#    -w            writable checkout (svn+ssh) instead of read-only (https)
+#    -R <repopath> provide a repo-path to use
+#    -d <diffnum>  checks out paths named in differential revision <diffnum>
 #
 # Example:
-# 	sparse-ports-checkout.sh -n ports-amarok \
-#		-p audio/amarok-kde4 \
-#		-p audio/libofa \
-#		-p devel/qtscriptgenerator
-#	sparse-ports-checkout.sh -n ports-kgraph \
-#		-w -d 12530
+#     sparse-ports-checkout.sh -n ports-amarok \
+#        -p audio/amarok-kde4 \
+#        -p audio/libofa \
+#        -p devel/qtscriptgenerator
+#    sparse-ports-checkout.sh -n ports-kgraph \
+#        -w -d 12530
 
 
 ### LICENSES/BSD-2-Clause.tcberner.adridg
@@ -70,93 +70,93 @@ unique_line ()
 
 main ()
 {
-	local tree=""
-	local categories=""
-	local ports=""
+    local tree=""
+    local categories=""
+    local ports=""
 
-	while getopts "a:n:p:f:wR:d:" opt ; do
-		case $opt in
-		w)
-			REP="${REP_w}"
-			;;
-		R)
-			REP="${OPTARG}"
-			;;
-		d)
-			diffnum="${OPTARG}"
-			# Digits come before char 'D', extend 12296 to D12296
-			if test 'D' '>' "${diffnum}" ; then
-				diffnum="D${diffnum}"
-			fi
-			echo "Loading differential revision ${diffnum}"
-			tmplist=/tmp/$$.portlist
-			fetch -o - "https://reviews.freebsd.org/${diffnum}?download=true" | egrep '^[+-]{3} [^/]' | cut -d' ' -f2 | cut -d/ -f1,2 | sort -u > ${tmplist}
-			category=`awk -F '/' '($1 && $2){print $1}' < ${tmplist} | sort | uniq`
-			port=`awk -F '/' '($1 && $2){print $1"/"$2}' < ${tmplist} | sort | uniq`
-			categories="${category} ${categories}"
-			ports="${port} ${ports}"
-			echo "  .. loaded" `wc -l < ${tmplist}` "ports from differential revision ${diffnum}"
-			rm -f $$.portlist
-			;;
-		n)
-			if [ "x${tree}y" == "xy" ] ; then
-				tree="${OPTARG}"
-				if [ -e "${tree}" ] ; then
-					echo "argument -n '${tree}' already exists in working directory"
-					return 1
-				fi
-			else
-				echo "multiple -n or -a arguments given: ${tree}, ${OPTARG}"
-				return 1
-			fi
-			;;
-		a)
-			if [ "x${tree}y" == "xy" ] ; then
-				tree="${OPTARG}"
-				if [ ! -d "${tree}" ] ; then
-					echo "argument to -a '${tree}' does not  exist in working directory, you need -n"
-					return 1
-				fi
-			else
-				echo "multiple -n or -a arguments given: ${tree}, ${OPTARG}"
-				return 1
-			fi
-			;;
-		p)
-			category=`echo "${OPTARG}" | awk -F '/' '{print $1}'`
-			port=`echo "${OPTARG}" | awk -F '/' '{print $2}'`
-			if [ "x${category}y" != "xy" -a "x${port}y" != "xy" ] ; then
-				categories="${category} ${categories}"
-				ports="${category}/${port} ${ports}"
-			else
-				echo "could not understand -p argument '${OPTARG}'"
-				return 1
-			fi
-			;;
-		f)
-			if [ -f "${OPTARG}" ] ; then
-				category=`cat "${OPTARG}" | awk -F '/' '($1 && $2){print $1}' | sort | uniq`
-				port=`cat "${OPTARG}" | awk -F '/' '($1 && $2){print $1"/"$2}' | sort | uniq`
-				categories="${category} ${categories}"
-				ports="${port} ${ports}"
-			else
-				echo "could not read ports list from -f file '${OPTARG}'"
-				return 1
-			fi
-			;;
-		esac
-	done
+    while getopts "a:n:p:f:wR:d:" opt ; do
+        case $opt in
+        w)
+            REP="${REP_w}"
+            ;;
+        R)
+            REP="${OPTARG}"
+            ;;
+        d)
+            diffnum="${OPTARG}"
+            # Digits come before char 'D', extend 12296 to D12296
+            if test 'D' '>' "${diffnum}" ; then
+                diffnum="D${diffnum}"
+            fi
+            echo "Loading differential revision ${diffnum}"
+            tmplist=/tmp/$$.portlist
+            fetch -o - "https://reviews.freebsd.org/${diffnum}?download=true" | egrep '^[+-]{3} [^/]' | cut -d' ' -f2 | cut -d/ -f1,2 | sort -u > ${tmplist}
+            category=`awk -F '/' '($1 && $2){print $1}' < ${tmplist} | sort | uniq`
+            port=`awk -F '/' '($1 && $2){print $1"/"$2}' < ${tmplist} | sort | uniq`
+            categories="${category} ${categories}"
+            ports="${port} ${ports}"
+            echo "  .. loaded" `wc -l < ${tmplist}` "ports from differential revision ${diffnum}"
+            rm -f $$.portlist
+            ;;
+        n)
+            if [ "x${tree}y" == "xy" ] ; then
+                tree="${OPTARG}"
+                if [ -e "${tree}" ] ; then
+                    echo "argument -n '${tree}' already exists in working directory"
+                    return 1
+                fi
+            else
+                echo "multiple -n or -a arguments given: ${tree}, ${OPTARG}"
+                return 1
+            fi
+            ;;
+        a)
+            if [ "x${tree}y" == "xy" ] ; then
+                tree="${OPTARG}"
+                if [ ! -d "${tree}" ] ; then
+                    echo "argument to -a '${tree}' does not  exist in working directory, you need -n"
+                    return 1
+                fi
+            else
+                echo "multiple -n or -a arguments given: ${tree}, ${OPTARG}"
+                return 1
+            fi
+            ;;
+        p)
+            category=`echo "${OPTARG}" | awk -F '/' '{print $1}'`
+            port=`echo "${OPTARG}" | awk -F '/' '{print $2}'`
+            if [ "x${category}y" != "xy" -a "x${port}y" != "xy" ] ; then
+                categories="${category} ${categories}"
+                ports="${category}/${port} ${ports}"
+            else
+                echo "could not understand -p argument '${OPTARG}'"
+                return 1
+            fi
+            ;;
+        f)
+            if [ -f "${OPTARG}" ] ; then
+                category=`cat "${OPTARG}" | awk -F '/' '($1 && $2){print $1}' | sort | uniq`
+                port=`cat "${OPTARG}" | awk -F '/' '($1 && $2){print $1"/"$2}' | sort | uniq`
+                categories="${category} ${categories}"
+                ports="${port} ${ports}"
+            else
+                echo "could not read ports list from -f file '${OPTARG}'"
+                return 1
+            fi
+            ;;
+        esac
+    done
 
-	if [ "x${tree}y" == "xy" ] ; then
-		echo "Need a tree argument -a, or -n"
-		return 1
-	fi
+    if [ "x${tree}y" == "xy" ] ; then
+        echo "Need a tree argument -a, or -n"
+        return 1
+    fi
 
-	if [ ! -d ${tree} ] ; then
-		svn co --depth empty "${REP}" "${tree}"
-	else
-		svn up "${tree}"
-	fi
+    if [ ! -d ${tree} ] ; then
+        svn co --depth empty "${REP}" "${tree}"
+    else
+        svn up "${tree}"
+    fi
 
     categories=`unique_line "${categories}"`
     ports=`unique_line "${ports}"`
@@ -171,7 +171,7 @@ main ()
         echo -e "\033[32mChecking out PORTS\033[0m"
         svn update --set-depth=infinity ${ports}
         echo -e "\033[32mChecking out Mk\033[0m"
-	svn update --set-depth=infinity Mk Keywords Templates .arcconfig MOVED UPDATING
+    svn update --set-depth=infinity Mk Keywords Templates .arcconfig MOVED UPDATING
     fi
 }
 
