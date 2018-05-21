@@ -20,4 +20,9 @@
   > mode, which means that you only get the bits needed to modify
   > and build the ports you ask for. Can also be used to create
   > a ports tree from a Phab review. Joint work with tcberner@
+  >
+  > Typical use is to create a writable checkout (that is, one over
+  > ssh which you can commit from) with a particular name, for one
+  > or more ports that need to be modified:
+  >     sparse-ports-checkout.sh -w -n ports-tree-name -p category/portname
 
