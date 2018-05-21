@@ -3,6 +3,8 @@
 #   SPDX-License-Identifier: BSD-2-Clause
 #   License-Filename: LICENSES/BSD-2-Clause.tcberner.adridg
 #
+### USAGE
+#
 # Checkout a shallow copy of the FreeBSD ports tree with only the
 # ports given as arguments filled in. Also checks out .arcconfig
 # (for convenient reviews) and Mk/ (so that there's a chance of using
@@ -20,6 +22,7 @@
 #    -w            writable checkout (svn+ssh) instead of read-only (https)
 #    -R <repopath> provide a repo-path to use
 #    -d <diffnum>  checks out paths named in differential revision <diffnum>
+#    -h            show this help
 #
 # Example:
 #     sparse-ports-checkout.sh -n ports-amarok \
@@ -28,7 +31,8 @@
 #        -p devel/qtscriptgenerator
 #    sparse-ports-checkout.sh -n ports-kgraph \
 #        -w -d 12530
-
+#
+### END USAGE
 
 ### LICENSES/BSD-2-Clause.tcberner.adridg
 #
@@ -57,7 +61,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 #
-###
+### END LICENSES
 
 # Writable vs non-writable SVN base
 REP_w=svn+ssh://repo.freebsd.org/ports/head
@@ -74,8 +78,12 @@ main ()
     local categories=""
     local ports=""
 
-    while getopts "a:n:p:f:wR:d:" opt ; do
+    while getopts "ha:n:p:f:wR:d:" opt ; do
         case $opt in
+        h|\?)
+            sed -e '1,/USAGE/d' -e '/END.USAGE/,$d' < "$0" 
+            return 0
+            ;;
         w)
             REP="${REP_w}"
             ;;
