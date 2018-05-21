@@ -12,25 +12,29 @@
 # infrastructure. For a single port, that's still about 7MB.
 #
 # Usage:
-#    sparse-ports-checkout <-n name|-a name> [-f portlist] <-p cat/port> ...
+#    sparse-ports-checkout <-n name|-a name> [-w] [-R path] <ports-spec> ...
 #
 # Usage:
 #    -n <name>     is for checking out a new sparse tree
 #    -a <name>     is for working on an existing tree
-#    -p <cat/port> names a port to check out
-#    -f <portlist> names a file to read a list of ports from
 #    -w            writable checkout (svn+ssh) instead of read-only (https)
 #    -R <repopath> provide a repo-path to use
-#    -d <diffnum>  checks out paths named in differential revision <diffnum>
 #    -h            show this help
+# Ports-spec names ports to check out:
+#    -p <cat/port> names a port to check out
+#    -f <portlist> names a file to read a list of ports from
+#    -d <diffnum>  checks out paths named in differential revision <diffnum>
+#    <cat/port>    (no option) names a port to check out
 #
 # Example:
-#     sparse-ports-checkout.sh -n ports-amarok \
+#    # Ports in several categories, all named
+#    sparse-ports-checkout.sh -n ports-amarok \
 #        -p audio/amarok-kde4 \
 #        -p audio/libofa \
 #        -p devel/qtscriptgenerator
+#    # Ports from a review, and devel/cmake too
 #    sparse-ports-checkout.sh -n ports-kgraph \
-#        -w -d 12530
+#        -w -d 12530 devel/cmake
 #
 ### END USAGE
 
@@ -158,6 +162,22 @@ main ()
     if [ "x${tree}y" == "xy" ] ; then
         echo "Need a tree argument -a, or -n"
         return 1
+    fi
+
+    _used_opt=`expr "$OPTIND" - 1`
+    if [ "$_used_opt" -lt "$#" ] ; then
+        shift "$_used_opt"
+        for OPTARG in "$@" ; do
+            category=`echo "${OPTARG}" | awk -F '/' '{print $1}'`
+            port=`echo "${OPTARG}" | awk -F '/' '{print $2}'`
+            if [ "x${category}y" != "xy" -a "x${port}y" != "xy" ] ; then
+                categories="${category} ${categories}"
+                ports="${category}/${port} ${ports}"
+            else
+                echo "could not understand argument '${OPTARG}'"
+                return 1
+            fi
+        done
     fi
 
     if [ ! -d ${tree} ] ; then
