@@ -42,17 +42,17 @@
 #
 # Copyright 2017 Tobias C. Berner <tcberner@FreeBSD.org>
 # Copyright 2017 Adriaan de Groot <adridg@FreeBSD.org>
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 #   1. Redistributions of source code must retain the above copyright
 #      notice, this list of conditions and the following disclaimer.
 #   2. Redistributions in binary form must reproduce the above copyright
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -76,6 +76,11 @@ unique_line ()
     echo `echo "$*" | tr ' ' '\n' | sort -u | tr ' ' '\n'`
 }
 
+category_makefiles ()
+{
+    echo `echo "$*" | awk 'BEGIN{RS=" "; OFS="/"}{print $1,"Makefile"}'`
+}
+
 main ()
 {
     local tree=""
@@ -85,7 +90,7 @@ main ()
     while getopts "ha:n:p:f:wR:d:" opt ; do
         case $opt in
         h|\?)
-            sed -e '1,/USAGE/d' -e '/END.USAGE/,$d' < "$0" 
+            sed -e '1,/USAGE/d' -e '/END.USAGE/,$d' < "$0"
             return 0
             ;;
         w)
@@ -187,15 +192,19 @@ main ()
     fi
 
     categories=`unique_line "${categories}"`
+    category_mfs=`category_makefiles "${categories}"`
     ports=`unique_line "${ports}"`
 
     echo -e "Checking out cats:  \033[33m${categories}\033[0m"
+    echo -e "Checking out catms: \033[33m${category_mfs}\033[0m"
     echo -e "Chekcout out ports: \033[33m${ports}\033[0m"
 
     if [ -d ${tree} ] ; then
         cd ${tree}
         echo -e "\033[32mChecking out CATEGORIES\033[0m"
         svn update --set-depth=empty ${categories}
+        echo -e "\033[32mCheckout out CATEGORY Makefile\033[0m"
+        svn update --set-depth=infinity ${category_mfs}
         echo -e "\033[32mChecking out PORTS\033[0m"
         svn update --set-depth=infinity ${ports}
         echo -e "\033[32mChecking out Mk\033[0m"
