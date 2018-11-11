@@ -34,3 +34,7 @@
   > dependencies for a given port. Both use the output from `pkg` to
   > obtain the dependency tree.
 
+
+## Instructions
+
+* [Updating with jails](UPDATING.md)
