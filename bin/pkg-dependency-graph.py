@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3.6
 #
 # A script to generate a .dot file (Graphviz) from installed
 # packages, to show what depends on what. Prints the dot code
