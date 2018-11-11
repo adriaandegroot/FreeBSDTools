@@ -25,4 +25,12 @@
   > ssh which you can commit from) with a particular name, for one
   > or more ports that need to be modified:
   >     sparse-ports-checkout.sh -w -n ports-tree-name -p category/portname
+* [bump_revision](bin/bump_revision.rb)
+  > This script bumps the `PORTREVISION` value in each named
+  > port, by editing the Makefile. If no `PORTREVISION` exists,
+  > adds one with value 1.
+* Ports graphs [perl](bin/pkg-dependency-graph.pl) [python](bin/pkg-dependency-graph.py)
+  > Both scripts use dot (`graphics/graphviz`) to produce a graph of the 
+  > dependencies for a given port. Both use the output from `pkg` to
+  > obtain the dependency tree.
 
