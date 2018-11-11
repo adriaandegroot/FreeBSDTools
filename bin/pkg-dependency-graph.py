@@ -1,8 +1,14 @@
 #! /usr/bin/env python
 #
 # A script to generate a .dot file (Graphviz) from installed
-# packages, to show what depends on what.
+# packages, to show what depends on what. Prints the dot code
+# to standard output.
+#
+# Use the option --root to print out, one per line, the roots
+# of the forest of installed packages (this suppresses regular
+# dot output).
 
+import argparse
 import os
 import subprocess
 import sys
@@ -84,12 +90,14 @@ def count_reverse(deps):
             
     return reverse_count
     
+def parse_args():
+    parser = argparse.ArgumentParser(description="pkg(8) graphing tool")
+    parser.add_argument("--roots", "-r", dest="roots", action="store_true", default=False)
+    return parser.parse_args()
     
-if __name__ == "__main__":
-    dependency_graph = normalize_deps(collect_pkg())
+def do_graph(dependency_graph):
     packages = list(dependency_graph.keys())
     packages.sort()
-
 
     print("### Root nodes:\n###\n#")
     count = count_reverse(dependency_graph)
@@ -108,3 +116,20 @@ if __name__ == "__main__":
             
     print("}")
     
+def do_roots(dependency_graph):
+    count = count_reverse(dependency_graph)
+    packages = list(dependency_graph.keys())
+    packages.sort()
+    for k in packages:
+        if count[k] == 0:
+            print(k)
+    
+if __name__ == "__main__":
+    args = parse_args()
+    dependency_graph = normalize_deps(collect_pkg())
+
+    if args.roots:
+        do_roots(dependency_graph)
+    else:
+        do_graph(dependency_graph)
+        
