@@ -22,6 +22,6 @@ ezjail-admin update -i
 poudriere jail -u -j 111amd64 -m src=/usr/src
 # Reboot and resume into new environment
 reboot
-# Build all the packages that aren't autoinstall
-poudriere bulk -j 111amd64 -p github-kde -t `pkg-dependency-graph.py --roots`
+# Build all packages that are needed for the "roots" (not-autoinstall)
+poudriere bulk -j 111amd64 -p github-kde -t -c `pkg-dependency-graph.py --roots`
 ```
