@@ -1,0 +1,20 @@
+#! /bin/sh
+#
+# Shows the "explicit" ports, that is, shows the ports that the
+# user has installed via "pkg install" and ignores all the
+# automatic ports. This is useful to rebuild "all the stuff
+# I specifically want" in poudriere. Use -n to print only
+# port names (for instance, to "pkg install" elsewhere).
+# Otherwise, full origins are printed (for "poudriere bulk").
+
+if test "x$1" = "x-n" ; then
+	postprocess() {
+		cut -d / -f 2 -
+	}
+else
+	postprocess() {
+		cat -
+	}
+fi
+
+pkg query '%o:%a' | grep ':0$' | cut -d : -f 1 | postprocess
