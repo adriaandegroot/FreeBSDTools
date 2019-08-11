@@ -1,0 +1,66 @@
+#! /bin/sh
+#
+# Copyright (c) 2019 Adriaan de Groot <adridg@FreeBSD.org>. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+# This shell script can be run on a freshly-installed FreeBSD system
+# to create an "instant-workstation".
+
+# Get a temporary location for dialog output
+base=`basename $0`
+CONFIG=`mktemp /tmp/${base}.XXXXXX` || { echo "! Cannot create temporary file." ; exit 1 ; }
+
+# Pick one or more DE's, and exactly one DM
+# 	NOTE: each ID should be distinct
+/usr/bin/dialog --no-tags --separate-output \
+	--checklist "Desktop Environment" 0 0 0 \
+		kde5 "KDE Plasma Desktop" 0 \
+		gnome3 "GNOME Desktop" 0 \
+		xfce4 "XFCE Desktop" 0 \
+		mate "MATE Desktop" 0 \
+	--radiolist "Display Manager" 0 0 0 \
+		sddm "SDDM" 1 2> ${CONFIG}
+
+
+packages=""
+sysrc=""
+for line in `cat "${CONFIG}"`
+do
+	case "x$line" in
+		"xkde5") 
+			packages="$packages x11/kde5 devel/dbus"
+			sysrc="$sysrc dbus_enable=YES"
+			;;
+		"xgnome3") 
+			packages="$packages x11/gnome3"
+			;;
+		"xxfce4") 
+			packages="$packages x11-wm/xfce4"
+			;;
+		"xmate") 
+			packages="$packages x11/mate-desktop"
+			;;
+		"xsddm") 
+			packages="$packages x11/sddm"
+			sysrc="$sysrc sddm_enable=YES"
+			;;
+		"*")
+			echo "! Unrecognized tag '${line}' in ${CONFIG}" 
+			exit 1
+			;;
+	esac
+done
+
+if test -z "$packages"
+then
+	echo "! No packages selected for installation."
+	exit 1
+fi
+
+if test -z "$sysrc"
+then
+	su root -c "/usr/sbin/pkg install $packages"
+else
+	su root -c "/usr/sbin/pkg install $packages ; /usr/sbin/sysrc $sysrc"
+fi
