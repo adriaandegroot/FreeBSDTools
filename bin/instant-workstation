@@ -63,12 +63,14 @@ done
 #
 # Best-guess for necessary hardware drivers
 #
-version=$( /usr/bin/uname -r | /usr/bin/sed 's/-.*//' )
+fbsd_version=$( /usr/bin/uname -r | /usr/bin/sed 's/-.*//' )
+vga_product=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,length($4)-3); }' )
+vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,8,4); }' )
 
 # Look for Intel graphics
-if test 8086 = $( pciconf -l | awk '/^vgapci/{ print substr($4,length($4)-3); }' )
+if test 8086 = "${vga_product}"
 then
-	case "x${version}" in
+	case "x${fbsd_version}" in
 		"x12.0")
 			packages="$packages graphics/drm-fbsd12.0-kmod"
 			;;
