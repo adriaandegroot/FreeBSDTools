@@ -11,8 +11,11 @@
 base=`basename $0`
 CONFIG=`mktemp /tmp/${base}.XXXXXX` || { echo "! Cannot create temporary file." ; exit 1 ; }
 
+### USER INPUT
+#
 # Pick one or more DE's, and exactly one DM
 # 	NOTE: each ID should be distinct
+#
 /usr/bin/dialog --no-tags --separate-output \
 	--checklist "Desktop Environment" 0 0 0 \
 		kde5 "KDE Plasma Desktop" 0 \
@@ -22,7 +25,11 @@ CONFIG=`mktemp /tmp/${base}.XXXXXX` || { echo "! Cannot create temporary file." 
 	--radiolist "Display Manager" 0 0 0 \
 		sddm "SDDM" 1 2> ${CONFIG}
 
-
+### PACKAGE SELECTION
+#
+# Turn the user input into specific packages and sysrc
+# commands to execute.
+#
 packages=""
 sysrc=""
 for line in `cat "${CONFIG}"`
@@ -52,6 +59,31 @@ do
 	esac
 done
 
+### HARDWARE SUPPORT
+#
+# Best-guess for necessary hardware drivers
+#
+version=$( /usr/bin/uname -r | /usr/bin/sed 's/-.*//' )
+
+# Look for Intel graphics
+if test 8086 = $( pciconf -l | awk '/^vgapci/{ print substr($4,length($4)-3); }' )
+then
+	case "x${version}" in
+		"x12.0")
+			packages="$packages graphics/drm-fbsd12.0-kmod"
+			;;
+		"x11.2")
+			packages="$packages graphics/drm-fbsd11.2-kmod"
+			;;
+		"*")
+			:
+			;;
+	esac
+fi
+
+### INSTALLATION
+#
+#
 if test -z "$packages"
 then
 	echo "! No packages selected for installation."
