@@ -57,7 +57,8 @@ do
 	case "x$line" in
 		"xkde5") 
 			packages="$packages x11/kde5 devel/dbus"
-			sysctl="$sysctl dbus_enable=YES net.local.stream.recvspace=65536 net.local.stream.sendspace=65536"
+			sysrc="$sysrc dbus_enable=YES"
+			sysctl="$sysctl net.local.stream.recvspace=65536 net.local.stream.sendspace=65536"
 			;;
 		"xgnome3") 
 			packages="$packages x11/gnome3"
