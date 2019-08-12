@@ -112,9 +112,14 @@ fi
 if test beef = "${vga_vendor}"
 then
 	# Virtualbox Support
-	packages="$packages virtualbox-ose-additions"
+	packages="$packages emulators/virtualbox-ose-additions"
 	sysrc="$sysrc vboxguest_enable=YES vboxservice_enable=YES"
 fi
+
+### X11
+#
+#
+packages="$packages x11/xorg"
 
 ### INSTALLATION
 #
