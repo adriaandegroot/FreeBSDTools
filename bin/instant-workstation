@@ -5,11 +5,30 @@
 # SPDX-License-Identifier: BSD-2-Clause
 #
 # This shell script can be run on a freshly-installed FreeBSD system
-# to create an "instant-workstation".
+# to create an "instant-workstation". It uses dialog(1) for user-input,
+# and does a best-effort to install what's needed.
+# - a desktop environment
+# - a display manager (and X and the rest)
+# - graphics drivers
+#
+# TODO: offer a selection of common applications (e.g. Firefox, an IDE, ..)
+#
+# Run with --selfupdate to update the script from its canonical source
+# (useful for testing updates to the script itself).
 
 # Get a temporary location for dialog output
 base=`basename $0`
 CONFIG=`mktemp /tmp/${base}.XXXXXX` || { echo "! Cannot create temporary file." ; exit 1 ; }
+
+### SELF-UPDATE
+#
+#
+if test "x$1" = "x--selfupdate"
+then
+	/usr/bin/fetch -o "${CONFIG}" https://raw.githubusercontent.com/adriaandegroot/FreeBSDTools/master/bin/instant-workstation
+	/bin/mv "${CONFIG}" "$0" ; exit 0
+fi
+
 
 ### USER INPUT
 #
@@ -58,6 +77,8 @@ do
 			;;
 	esac
 done
+
+rm "${CONFIG}"
 
 ### HARDWARE SUPPORT
 #
