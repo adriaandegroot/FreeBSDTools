@@ -51,12 +51,13 @@ fi
 #
 packages=""
 sysrc=""
+sysctl=""
 for line in `cat "${CONFIG}"`
 do
 	case "x$line" in
 		"xkde5") 
 			packages="$packages x11/kde5 devel/dbus"
-			sysrc="$sysrc dbus_enable=YES net.local.stream.recvspace=65536 net.local.stream.sendspace=65536"
+			sysctl="$sysctl dbus_enable=YES net.local.stream.recvspace=65536 net.local.stream.sendspace=65536"
 			;;
 		"xgnome3") 
 			packages="$packages x11/gnome3"
@@ -123,9 +124,14 @@ then
 	exit 1
 fi
 
-if test -z "$sysrc"
+command="/usr/sbin/pkg install $packages"
+if test -n "$sysrc"
 then
-	su root -c "/usr/sbin/pkg install $packages"
-else
-	su root -c "/usr/sbin/pkg install $packages ; /usr/sbin/sysrc $sysrc"
+	command="$command ; /usr/sbin/sysrc $sysrc";
 fi
+if test -n "$sysctl"
+then
+	command="$command ; /usr/sbin/sysrc -f /etc/sysctl.conf $sysctl";
+fi
+
+su root -c "$command"
