@@ -104,6 +104,16 @@ then
 	esac
 fi
 
+### VIRTUALBOX
+#
+#
+if test beef = "${vga_vendor}"
+then
+	# Virtualbox Support
+	packages="$packages virtualbox-ose-additions"
+	sysrc="$sysrc vboxguest_enable=YES vboxservice_enable=YES"
+fi
+
 ### INSTALLATION
 #
 #
