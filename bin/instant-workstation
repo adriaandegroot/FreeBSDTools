@@ -150,7 +150,6 @@ then
 	command="$command ; /sbin/sysctl -f /etc/sysctl.conf $sysctl";
 fi
 
-echo $command
 su root -c "$command"
 
 ### VMWARE Post installation
