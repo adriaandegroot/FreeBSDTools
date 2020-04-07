@@ -94,10 +94,10 @@ vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,8,
 if test 8086 = "${vga_product}"
 then
 	case "x${fbsd_version}" in
-		"x12.0")
+		"x12."[012])
 			packages="$packages graphics/drm-fbsd12.0-kmod"
 			;;
-		"x11.2")
+		"x11."[234])
 			packages="$packages graphics/drm-fbsd11.2-kmod"
 			;;
 		"*")
