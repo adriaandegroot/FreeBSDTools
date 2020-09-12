@@ -149,7 +149,9 @@ then
 fi
 if test -n "$sysctl"
 then
-	command="$command ; /usr/sbin/sysrc -f /etc/sysctl.conf $sysctl";
+	for l in $sysctl ; do
+		command="$command ; echo \"$l\" >> /etc/sysctl.conf"
+	done
 fi
 
 su root -c "$command"
