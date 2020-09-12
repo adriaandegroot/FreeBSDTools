@@ -41,6 +41,12 @@ fi
 		gnome3 "GNOME Desktop" 0 \
 		xfce4 "XFCE Desktop" 0 \
 		mate "MATE Desktop" 0 \
+	--checklist "Extra Software for .." 0 0 0 \
+		kdedevel "C++ Development" 0 \
+		telegram "Telegram" 0 \
+		matrix "Matrix" 0 \
+		irc "IRC" 0 \
+		management "Host Management" 0 \
 	--radiolist "Display Manager" 0 0 0 \
 		sddm "SDDM" 1 2> ${CONFIG}
 
@@ -56,7 +62,7 @@ for line in `cat "${CONFIG}"`
 do
 	case "x$line" in
 		"xkde5") 
-			packages="$packages x11/kde5 devel/dbus"
+			packages="$packages x11/kde5 devel/dbus www/falkon"
 			sysrc="$sysrc dbus_enable=YES"
 			sysctl="$sysctl net.local.stream.recvspace=65536 net.local.stream.sendspace=65536"
 			;;
@@ -72,6 +78,22 @@ do
 		"xsddm") 
 			packages="$packages x11/sddm"
 			sysrc="$sysrc sddm_enable=YES"
+			;;
+		"xkdedevel")
+			# TODO: distinguish DE and install matching gitk and IDE?
+			packages="$packages devel/ccache devel/cmake devel/git devel/kdevelop devel/qgit"
+			;;
+		"xtelegram")
+			packages="$packages net-im/telegram-desktop"
+			;;
+		"xmatrix")
+			packages="$packages net-im/nheko"
+			;;
+		"xirc")
+			packages="$packages irc/quassel irc/irssi"
+			;;
+		"xmanagement")
+			packages="$packages sysutils/screen sysutils/ezjail"
 			;;
 		"*")
 			echo "! Unrecognized tag '${line}' in ${CONFIG}" 
@@ -98,7 +120,9 @@ case "x${fbsd_version}" in
 		vga_product=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ for(i=2; i<=NF; i++) { if ( substr($i,0,7)=="device=" ) print substr($i,10); } }' )
 		vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ for(i=2; i<=NF; i++) { if ( substr($i,0,7)=="vendor=" ) print substr($i,10); } }' )
 		;;
-	"*")
+	*)
+		echo "Unrecognized FreeBSD version '${fbsd_version}'"
+		exit 1
 		;;
 esac
 
@@ -112,8 +136,12 @@ then
 		"x11."[234])
 			packages="$packages graphics/drm-fbsd11.2-kmod"
 			;;
-		"*")
+		"x13."*)
 			:
+			;;
+		*)
+			echo "Unrecognized FreeBSD version '${fbsd_version}'"
+			exit 1
 			;;
 	esac
 fi
