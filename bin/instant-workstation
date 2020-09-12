@@ -87,8 +87,20 @@ rm "${CONFIG}"
 # Best-guess for necessary hardware drivers
 #
 fbsd_version=$( /usr/bin/uname -r | /usr/bin/sed 's/-.*//' )
-vga_product=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,length($4)-3); }' )
-vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,8,4); }' )
+
+# The reporting from pciconf has changed, too
+case "x${fbsd_version}" in
+	"x1[12]."*)
+		vga_product=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,length($4)-3); }' )
+		vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ print substr($4,8,4); }' )
+		;;
+	"x13."*)
+		vga_product=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ for(i=2; i<=NF; i++) { if ( substr($i,0,7)=="device=" ) print substr($i,10); } }' )
+		vga_vendor=$( /usr/sbin/pciconf -l | /usr/bin/awk '/^vgapci/{ for(i=2; i<=NF; i++) { if ( substr($i,0,7)=="vendor=" ) print substr($i,10); } }' )
+		;;
+	"*")
+		;;
+esac
 
 # Look for Intel graphics
 if test 8086 = "${vga_product}"
