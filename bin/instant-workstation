@@ -118,6 +118,12 @@ then
 	esac
 fi
 
+# Look for NVidia graphics
+if test 10de = "${vga_vendor}"
+then
+	packages="nvidia-driver nvidia-xconfig"
+fi
+
 ### VIRTUALBOX
 #
 #
