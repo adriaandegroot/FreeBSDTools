@@ -14,6 +14,10 @@
 
 ## Tools
 
+* [instant-workstation](bin/instant-workstation)
+  > This script uses `dialog(1)` to ask a few questions, and then
+  > installs the software and configuration needed for that workstation-use.
+  > It is tailored to my needs, but accepts PRs for other uses.
 * [sparse-checkout](bin/sparse-ports-checkout.sh)
   > This script checks out a (writable) ports-tree suitable for working
   > on individual ports. The ports tree is checked out in *sparse*
@@ -38,3 +42,11 @@
 ## Instructions
 
 * [Updating with jails](UPDATING.md)
+
+## Contributors
+
+The work in this repository is not only my own. Other contributors
+alphabetically by first name or nickname are:
+
+- natethegreat44
+- Tobias Berner
