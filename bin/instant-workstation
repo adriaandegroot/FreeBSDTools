@@ -41,6 +41,8 @@ fi
 		gnome3 "GNOME Desktop" 0 \
 		xfce4 "XFCE Desktop" 0 \
 		mate "MATE Desktop" 0 \
+		stump "STUMP WM" 0 \
+		twm "X like the '90s" 0 \
 	--checklist "Extra Software for .." 0 0 0 \
 		kdedevel "C++ Development" 0 \
 		telegram "Telegram" 0 \
@@ -74,6 +76,12 @@ do
 			;;
 		"xmate") 
 			packages="$packages x11/mate-desktop"
+			;;
+		"xstump")
+			packages="$packages x11-wm/stumpwm"
+			;;
+		"xtwm")
+			packages="$packages x11-wm/twm x11/xterm x11-fonts/xfontsel"
 			;;
 		"xsddm") 
 			packages="$packages x11/sddm"
