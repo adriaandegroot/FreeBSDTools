@@ -81,7 +81,7 @@ do
 			;;
 		"xkdedevel")
 			# TODO: distinguish DE and install matching gitk and IDE?
-			packages="$packages devel/ccache devel/cmake devel/git devel/kdevelop devel/qgit"
+			packages="$packages devel/ccache devel/cmake devel/git devel/kdevelop devel/qgit devel/ninja"
 			;;
 		"xtelegram")
 			packages="$packages net-im/telegram-desktop"
