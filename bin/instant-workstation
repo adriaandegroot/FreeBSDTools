@@ -116,6 +116,16 @@ then
 	sysrc="$sysrc vboxguest_enable=YES vboxservice_enable=YES"
 fi
 
+### VMWARE
+#
+#
+if test 0405 = "${vga_vendor}"
+then
+	# VMWare Workstation Support
+	packages="$packages open-vm-tools xf86-input-vmmouse xf86-video-vmware"
+	sysrc="$sysrc dbus_enable=YES moused_enable=YES vmware_guest_vmblock_enable=YES vmware_guest_vmhgfs_enable=YES vmware_guest_vmmemctl_enable=YES vmware_guest_vmxnet_enable=YES vmware_guestd_enable=YES"
+fi
+
 ### X11
 #
 #
@@ -141,3 +151,34 @@ then
 fi
 
 su root -c "$command"
+
+### VMWARE Post installation
+#
+#
+if test 0405 = "${vga_vendor}"
+then
+	echo 'Updating vmware X configuration'
+	mkdir -p /usr/local/etc/X11/xorg.conf.d
+	
+	# X11 configuration
+	echo '# Temporary fix to set vmmouse
+	Section "ServerFlags"
+		Option     "AutoAddDevices" "false"
+	EndSection
+	
+	Section "InputDevice"
+		Identifier "Mouse0"
+		Driver     "vmmouse"
+		Option     "Device" "/dev/sysmouse"
+	EndSection
+	
+	Section "Device"
+		Identifier "Card0"
+		Driver     "vmware"
+	EndSection' > /usr/local/etc/X11/xorg.conf.d/vmware.conf
+
+	# Enable 3D acceleration when available
+	echo 'To enable 3D acceleration, add your username(s) to the ''video'' group with:'
+	echo '    pw groupmod video -m <username>'
+fi
+
