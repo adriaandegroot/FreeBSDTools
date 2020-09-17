@@ -1,7 +1,6 @@
 #! /bin/sh
 #
-# Copyright (c) 2019 Adriaan de Groot <adridg@FreeBSD.org>. All rights reserved.
-#
+# SPDX-FileCopyrightText: 2019 Adriaan de Groot <adridg@FreeBSD.org>
 # SPDX-License-Identifier: BSD-2-Clause
 #
 # This shell script can be run on a freshly-installed FreeBSD system
@@ -11,7 +10,6 @@
 # - a display manager (and X and the rest)
 # - graphics drivers
 #
-# TODO: offer a selection of common applications (e.g. Firefox, an IDE, ..)
 #
 # Run with --selfupdate to update the script from its canonical source
 # (useful for testing updates to the script itself).
@@ -42,7 +40,7 @@ fi
 		xfce4 "XFCE Desktop" 0 \
 		mate "MATE Desktop" 0 \
 		stump "STUMP WM" 0 \
-		twm "X like the '90s" 0 \
+		twm "TWM, X like the '90s" 0 \
 	--checklist "Extra Software for .." 0 0 0 \
 		kdedevel "C++ Development" 0 \
 		telegram "Telegram" 0 \
