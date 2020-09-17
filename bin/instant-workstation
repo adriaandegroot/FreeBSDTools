@@ -18,6 +18,8 @@
 base=`basename $0`
 CONFIG=`mktemp /tmp/${base}.XXXXXX` || { echo "! Cannot create temporary file." ; exit 1 ; }
 
+setup_polkit=false
+
 ### SELF-UPDATE
 #
 #
@@ -84,6 +86,7 @@ do
 		"xsddm") 
 			packages="$packages x11/sddm"
 			sysrc="$sysrc sddm_enable=YES"
+			setup_polkit=true
 			;;
 		"xkdedevel")
 			# TODO: distinguish DE and install matching gitk and IDE?
@@ -204,6 +207,7 @@ then
 	done
 fi
 
+echo "su root for installation and configuration"
 su root -c "$command"
 
 ### VMWARE Post installation
@@ -236,3 +240,19 @@ then
 	echo '    pw groupmod video -m <username>'
 fi
 
+### SDDM Post installation
+#
+#
+if $setup_polkit ; then
+	echo 'Allowing the ''operator'' group to shut modify system state from SDDM.'
+	polkit_file="/usr/local/etc/polkit-1/rules.d/40-operator-group-sddm.rules"
+	su root -c "cat > $polkit_file" <<EOF
+// Operators may stop the machine -- that is both restart and shutdown
+// from inside the KDE Plasma desktop, when used with SDDM
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.consolekit.system.stop" && subject.isInGroup("operator")) {
+        return polkit.Result.YES;
+    }
+});
+EOF
+fi
