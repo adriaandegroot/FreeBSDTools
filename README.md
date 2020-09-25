@@ -42,6 +42,7 @@
 ## Instructions
 
 * [Updating with jails](UPDATING.md)
+* [Updating home Certificate Authority](UPDATING.md#ssl-certs)
 
 ## Contributors
 
