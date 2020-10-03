@@ -65,6 +65,7 @@ fi
 		telegram "Telegram" 0 \
 		matrix "Matrix" 0 \
 		irc "IRC" 0 \
+		latex "LaTeX" 0 \
 		management "Host Management" 0 \
 	--radiolist "Display Manager" 0 0 0 \
 		sddm "SDDM" 1 2> ${CONFIG}
@@ -117,6 +118,9 @@ do
 			;;
 		"xirc")
 			packages="$packages irc/quassel irc/irssi"
+			;;
+		"xlatex")
+			packages="$packages print/texlive-base print/tex-basic-engines print/tex-formats"
 			;;
 		"xmanagement")
 			packages="$packages sysutils/screen sysutils/ezjail"
