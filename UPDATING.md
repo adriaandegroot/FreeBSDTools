@@ -1,4 +1,14 @@
-# Updating instructions
+# New Install
+
+> These are instructions for getting a system up-and-running for **me**.
+
+Fetch the instant-workstation script, as root, and then run it.
+```
+# fetch https://raw.githubusercontent.com/adriaandegroot/FreeBSDTools/main/bin/instant-workstation
+# sh instant-workstation
+```
+
+# Updating Jails
 
 > These are the instructions for **my** update process, written
 > down mostly so I can cut-and-paste them in future.

@@ -3,16 +3,33 @@
 # SPDX-FileCopyrightText: 2019 Adriaan de Groot <adridg@FreeBSD.org>
 # SPDX-License-Identifier: BSD-2-Clause
 #
+### USAGE
+#
 # This shell script can be run on a freshly-installed FreeBSD system
 # to create an "instant-workstation". It uses dialog(1) for user-input,
 # and does a best-effort to install what's needed.
 # - a desktop environment
 # - a display manager (and X and the rest)
 # - graphics drivers
+# - tooling for various tasks
 #
+#
+# Usage:
+#   instant-workstation [-h] [--selfupdate|-U]
+#
+# Usage:
+#   -h                  show this help
+#   -U, --selfupdate    update the script and run it again
 #
 # Run with --selfupdate to update the script from its canonical source
 # (useful for testing updates to the script itself).
+#
+### END USAGE
+
+if test "x$1" = "x-h" ; then
+	sed -e '1,/USAGE/d' -e '/END.USAGE/,$d' < "$0"
+	exit 0
+fi
 
 # Get a temporary location for dialog output
 base=`basename $0`
@@ -23,9 +40,9 @@ setup_polkit=false
 ### SELF-UPDATE
 #
 #
-if test "x$1" = "x--selfupdate"
+if test "x$1" = "x--selfupdate" -o "x$1" = "x-U"
 then
-	/usr/bin/fetch -o "${CONFIG}" https://raw.githubusercontent.com/adriaandegroot/FreeBSDTools/master/bin/instant-workstation
+	/usr/bin/fetch -o "${CONFIG}" https://raw.githubusercontent.com/adriaandegroot/FreeBSDTools/main/bin/instant-workstation
 	/bin/mv "${CONFIG}" "$0" ; exit 0
 fi
 

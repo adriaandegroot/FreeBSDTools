@@ -41,7 +41,8 @@
 
 ## Instructions
 
-* [Updating with jails](UPDATING.md)
+* [New Install](UPDATING.md#new-install)
+* [Updating with jails](UPDATING.md#updating-jails)
 * [Updating home Certificate Authority](UPDATING.md#ssl-certs)
 
 ## Contributors
